@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>SQL管理</title>
+    <link rel="shortcut icon" href="/images/fav.jpg" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+
+<body>
+    <div class="top">
+        <a href="/"><img src="/images/logo.png" style="height:50px;" /></a>
+    </div>
+    <div style="clear:both;padding-top:5px;margin-bottom:5px;">
+    </div>
+
+    <div
+        style="margin:0 auto;background:#effecf;border:1px solid #dddddd;max-width:450px;display:block;border-radius: 15px;padding:10px;line-height:2;">
+        <div style="font-weight:bold">登录信息</div>
+        <form enctype="form-data" action="/login?save=1" method="post">
+            <table>
+                <tr>
+                    <td height="30"></td>
+                    <td>提醒：数据库名称不填，可为root权限登录</td>
+                </tr>
+                <tr>
+                    <td height="30">数据类型：</td>
+                    <td><input name="sqltype" type="radio" checked />Mysql</td>
+                </tr>
+                <tr>
+                    <td height="30">数据库地址：</td>
+                    <td><input name="addr" type="text" style="width:180px;height:30px;" /></td>
+                </tr>
+                <tr>
+                    <td height="30">帐号：</td>
+                    <td><input name="username" type="text" style="width:180px;height:30px;" /></td>
+                </tr>
+                <tr>
+                    <td height="30">密码：</td>
+                    <td><input name="password" type="password" style="width:130px;height:30px;" /></td>
+                </tr>
+                <tr>
+                    <td height="30">数据库名称：</td>
+                    <td><input name="database_name" type="text" style="width:150px;height:30px;" />(选填)</td>
+                </tr>
+                <tr>
+                    <td height="30"></td>
+                    <td><input type="submit" value="立即连接" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <br />
+    <div style="font-size:11pt;color:#666666;">
+        sql.wuknet v1.0.0<br />
+        wuknet.net<br />
+        悟空网络
+    </div>
+    <br /><br />
+</body>
+
+</html>

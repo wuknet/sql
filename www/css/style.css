@@ -1,0 +1,20 @@
+body {
+    margin:0 auto;
+	margin-left:10px;
+	margin-right:10px;
+	max-width:1200px;
+	width:expression((document.documentElement.clientWidth||document.body.clientWidth)>1200 ? 1200 : true);
+}
+    
+a {
+	text-decoration:none;color:#0000ff;
+}
+
+.top {
+	margin:auto;float:left;margin-top:3px;
+}
+
+.tom{
+	font-size:10pt;
+	color:#666666;
+}
