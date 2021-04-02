@@ -3,11 +3,12 @@ package fun
 import (
 	//"io"
 	"fmt"
-	"os"
 	"log"
+	"os"
 )
 
 var logger *log.Logger
+
 func Log(Levle int, Message string) {
 	//Message = Gettime() + "  " + Message + "\r\n"
 	Message = Message + "\r\n"
@@ -31,6 +32,6 @@ func SaveLog(Message string) {
 	logger = log.New(f, "", log.LstdFlags|log.Lshortfile) // 日志文件格式:log包含时间及文件行数
 	//logger.SetFlags(log.LstdFlags | log.Lshortfile) // 设置日志格式
 	fmt.Println(Message) //输出日志到命令行终端
-	log.Println(Message) //输出日志到命令行终端
+	//log.Println(Message) //输出日志到命令行终端
 	logger.Println(Message) //将日志写入文件
 }

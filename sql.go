@@ -69,8 +69,6 @@ func sql_wuknet_net() {
 
 func init() { //初始化函数
 	AppPath = fun.GetAppPath() //读取当前目录路径
-	fun.Log(0, "================>>>  开始启动...")
-
 	cfg, err := goconfig.LoadConfigFile(AppPath + "/conf.ini")
 	if err != nil {
 		fun.Log(0, "读取配置文件错误")
@@ -87,8 +85,6 @@ func init() { //初始化函数
 
 	fmt.Println("GOPATH路径：" + os.Getenv("GOPATH"))
 	fmt.Println("程序路径：" + AppPath)
-	fun.Log(0, "开始服务...")
-
 }
 
 func main() {
@@ -101,9 +97,9 @@ func main() {
 	}()
 
 	svcConfig := &service.Config{
-		Name:        "sqladmin",            //服务名称
-		DisplayName: "sql.wuknet.net",      //服务显示名称
-		Description: "由wuknet.net提供的网址库服务", //服务描述
+		Name:        "sqladmin",         //服务名称
+		DisplayName: "sql.wuknet.net",   //服务显示名称
+		Description: "由wuknet.net提供的服务", //服务描述
 	}
 
 	prg := &program{}
@@ -152,7 +148,7 @@ func main() {
 			logger.Info("服务卸载成功!")
 			break
 		case "version":
-			fmt.Println("wuknet.net V1.0")
+			fmt.Println("wuknet sql V1.0.0")
 			break
 		}
 		return
