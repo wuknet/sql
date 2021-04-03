@@ -8,5 +8,8 @@ https://github.com/wuknet/sql<br />
 安装方法：<br />
 ./sql install #安装程序<br />
 ./sql reinstall #重新安装<br />
+./sql start #启动<br />
+./sql stop #停止<br />
 ./sql remove #删除安装<br />
+./sql version #查看版本<br />
 注意：安装后默认在后台运行，如果要开机自动启动请另行配置。
