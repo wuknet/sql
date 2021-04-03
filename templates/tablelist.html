@@ -31,11 +31,12 @@
     </div>
     <div style="float:right;margin-top:20px;">
         <a href="/run/?database_name={{.database_name}}">运行SQL</a>&nbsp;
+        <a href="/run/?database_name={{.database_name}}&runcomm=delete_database">删除库</a>&nbsp;
         <a href="/run/?database_name={{.database_name}}&runcomm=create_table">新建表</a>&nbsp;
         <a href="/exit">退出</a>&nbsp;
     </div>
     <div style="clear:both;padding-top:5px;margin-bottom:5px;">
-    <a href="/">首页</a> -> <a href="/datalist">数据库</a> -> {{.database_name}} -> 所有表({{.tableNum}})
+    <a href="/">首页</a> -> <a href="/datalist">数据库</a> -> {{.database_name}}(库) -> 所有表({{.tableNum}})
     </div>
 
     <div>

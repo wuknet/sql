@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	//"strconv"
 
@@ -42,38 +43,52 @@ func Rowslist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		//select column_name,columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra from information_schema.columns
 
 		sqlstr := "select column_name,DATA_TYPE,COLUMN_TYPE,COLUMN_KEY,EXTRA from information_schema.columns where table_name = '" + tablename + "' and table_schema='" + database_name + "';"
-		rows, _ := mysql.Query(db, sqlstr)
-		if len(rows) > 0 {
-			//columns := strings.Split(rows[0][0], ",")
-			columnNum := len(rows)
-			rowslist += `<table border="1" class="rowslist" width="100%">
+		rows, err := mysql.Query(db, sqlstr)
+		if err != nil {
+			rowslist += fmt.Sprintf("%v", err)
+		} else {
+			if len(rows) > 0 {
+				//columns := strings.Split(rows[0][0], ",")
+				columnNum := len(rows)
+				rowslist += `<table border="1" class="rowslist" width="100%">
 			<tr style="background:#eeeeee;">`
-			for i := 0; i < columnNum; i++ {
-				column_key := "-" //判断是否有主键
-				if rows[i][3] != "" {
-					column_key = "(" + rows[i][3] + ")"
-				}
-				auto_increment := ""
-				if rows[i][4] == "auto_increment" {
-					auto_increment = `<font style="color:red;">&uarr;</font>`
-				}
+				for i := 0; i < columnNum; i++ {
+					column_key := "-" //判断是否有主键
+					if rows[i][3] != "" {
+						column_key = "(" + rows[i][3] + ")"
+					}
+					auto_increment := ""
+					if rows[i][4] == "auto_increment" {
+						auto_increment = `&nbsp;<font style="color:red;">&uarr;</font>`
+					}
 
-				rowslist += `
-				<td align="center"><b>` + rows[i][0] + `</b>` + auto_increment + `<br />` + rows[i][2] + `<br />` + column_key + `</td>`
-			}
-			rowslist += "</tr>"
-
-			sqlstr = "select * from " + database_name + "." + tablename + " limit 30"
-			rows, _ = mysql.Query(db, sqlstr)
-			for i := 0; i < len(rows); i++ {
-				rowslist += "<tr>"
-				for j := 0; j < len(rows[i]); j++ {
 					rowslist += `
-				<td>` + rows[i][j] + `</td>`
+				<td align="center"><b>` + rows[i][0] + `</b>` + auto_increment + `<br />` + rows[i][2] + `<br />` + column_key + `</td>`
 				}
 				rowslist += "</tr>"
+
+				sqlstr = "select * from " + database_name + "." + tablename + " limit 30"
+				rows, err = mysql.Query(db, sqlstr)
+				if err != nil {
+					rowslist += "<tr><td colspan=\"" + strconv.Itoa(columnNum) + "\" align=\"center\">" + fmt.Sprintf("%v", err) + "</td></tr>"
+				} else {
+					if len(rows) > 0 {
+						for i := 0; i < len(rows); i++ {
+							rowslist += "<tr>"
+							for j := 0; j < len(rows[i]); j++ {
+								rowslist += `
+				            <td>` + rows[i][j] + `</td>`
+							}
+							rowslist += "</tr>"
+						}
+					} else {
+						rowslist += "<tr><td colspan=\"" + strconv.Itoa(columnNum) + "\" align=\"center\">没有任何记录！</td></tr>"
+					}
+				}
+				rowslist += "</table>"
+			} else {
+				rowslist += "<div style=\"color:red;\">没有找到这个表！</div>"
 			}
-			rowslist += "</table>"
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////

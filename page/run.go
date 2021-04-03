@@ -28,9 +28,7 @@ func Run(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	username := fun.ReadCookie(w, r, "username")
 	password := fun.ReadCookie(w, r, "password")
 	database_name := fun.Get_str(r, "database_name")
-	if database_name == "" {
-		database_name = "未知"
-	}
+
 	tablename := fun.Get_str(r, "tablename")
 	sqlstr := fun.Get_str(r, "sqlstr")
 	if tablename == "" {
@@ -90,6 +88,25 @@ func Run(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	} else { //运行样例
 		runComm := fun.Get_str(r, "runcomm")
 		switch runComm {
+		case "create_database": //建立数据库
+			{
+				sqlstr = `
+CREATE DATABASE IF NOT EXISTS <数据库名>
+#建立新的数据库
+`
+			}
+		case "delete_database": //删除数据库
+			{
+				if database_name == `` {
+					sqlstr = `
+DROP DATABASE <数据库名>
+#删除数据库`
+				} else {
+					sqlstr = `
+DROP DATABASE ` + database_name + `
+#删除数据库`
+				}
+			}
 		case "create_table":
 			{
 				sqlstr = `
@@ -102,7 +119,6 @@ CREATE TABLE IF NOT EXISTS ` + tablename + ` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 #建表语法样例`
 			}
-
 		case "delete_table":
 			{
 				sqlstr = `
