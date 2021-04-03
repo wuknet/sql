@@ -49,7 +49,8 @@ func Run(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			sqlstr = strings.Trim(sqlstr, " ") //清除二边空格
 			sqls := strings.Split(sqlstr, " ") //分解
 
-			if strings.ToLower(sqls[0]) == "select" {
+			commstr := strings.ToLower(sqls[0])
+			if commstr == "select" {
 				if strings.Contains(strings.ToLower(sqlstr), " limit ") == false {
 					if strings.HasSuffix(sqlstr, ";") {
 						sqlstr = strings.TrimRight(sqlstr, ";")
@@ -57,56 +58,65 @@ func Run(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 					sqlstr = sqlstr + " limit 30;"
 				}
 			}
-			runResult = "Search result：<br />"
-			rows, err := mysql.Query(db, sqlstr)
-			if err != nil {
-				runResult += "查询错误：" + fmt.Sprintf("%v", err)
-			} else {
-				if len(rows) > 0 {
-					runResult += `<table border="1" class="runResult">`
-					for i := 0; i < len(rows); i++ {
-						runResult += `<tr>`
-						for j := 0; j < len(rows[i]); j++ {
-							runResult += "<td>&nbsp;" + rows[i][j] + "</td>"
-						}
-						runResult += `</tr>`
-					}
-					runResult += `</table>`
+			runResult = "状态：<br />"
+			if commstr == "drop" || commstr == "delete" || commstr == "create" {
+				_, err := db.Exec(sqlstr)
+				if err != nil {
+					runResult += "<div style=\"color:red;\">" + fmt.Sprintf("%v", err) + "</div>"
 				} else {
-					runResult = "没有任何记录！"
+					runResult += "<div style=\"color:blue;\">Run successfully！</div>"
+				}
+			} else {
+				rows, err := mysql.Query(db, sqlstr)
+				if err != nil {
+					runResult += "查询错误：" + fmt.Sprintf("%v", err)
+				} else {
+					if len(rows) > 0 {
+						runResult += `<table border="1" class="runResult">`
+						for i := 0; i < len(rows); i++ {
+							runResult += `<tr>`
+							for j := 0; j < len(rows[i]); j++ {
+								runResult += "<td>&nbsp;" + rows[i][j] + "</td>"
+							}
+							runResult += `</tr>`
+						}
+						runResult += `</table>`
+					} else {
+						runResult += "没有任何记录！"
+					}
 				}
 			}
 		}
-	} else {
+	} else { //运行样例
 		runComm := fun.Get_str(r, "runcomm")
 		switch runComm {
 		case "create_table":
 			{
 				sqlstr = `
-#建表语法样例
 CREATE TABLE IF NOT EXISTS ` + tablename + ` (
 	id INT UNSIGNED AUTO_INCREMENT,
 	title VARCHAR(100) NOT NULL,
 	content VARCHAR(40) NOT NULL,
 	create_date DATETIME,
 	PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;`
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+#建表语法样例`
 			}
 
 		case "delete_table":
 			{
 				sqlstr = `
-#删除表样例
-DROP TABLE ` + tablename
+DROP TABLE ` + tablename + `
+#删除表样例`
 			}
 
 		case "alter_table":
 			{
 				sqlstr = `
-#字段操作样例
 ALTER TABLE ` + tablename + ` ADD COLUMN_Name VARCHAR(100) NOT NULL
 ALTER TABLE ` + tablename + ` MODIFY COLUMN_Name VARCHAR(100) NOT NULL
 ALTER TABLE ` + tablename + ` DROP COLUMN_Name
+#字段操作样例
 `
 			}
 		}

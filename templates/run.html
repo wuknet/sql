@@ -35,7 +35,9 @@
         .sqlstr{
             width:98%;
             height:200px;
-            margin:10px;
+            margin-left:10px;
+            margin-right:10px;
+            margin-bottom:0px;
             font-size:11pt;
         }
     </style>
@@ -53,25 +55,27 @@
     {{end}}
     -> 运行SQL
     </div>
-    <div class="mainrun" style="margin-top:10px;padding:10px;line-height:1.5;">
-    example:<br />
-    select * from {{.tablename}} where ... limit 1<br />
-    delete from {{.tablename}} where ...<br />
-    update {{.tablename}} set ... where ...<br />
-    drop table {{.tablename}}<br />
-    alter table {{.tablename}} rename New_TableName;
-    </div>
     <div class="mainrun" style="margin-top:10px;">
     <form action="/run/?isrun=1&database_name={{.database_name}}&tablename={{.tablename}}" method="post">
+    <div style="margin-left:10px;color:#666666;">命令行开头不要包含注释</div>
     <textarea id="sqlstr" name="sqlstr" class="sqlstr">{{.sqlstr}}</textarea>
+    <div style="padding-left:10px;line-height:1.5;">
+        {{.runResult}}
+    </div>
     <div style="width:100%;text-align:center;">
         <input type="submit" value="运行SQL" style="padding:2px;font-size:11pt;" />
     </div>
     </form>    
     </div>
-    <div style="margin-top:10px;padding:10px;">
-        {{.runResult}}
-    </div>
+
+    <div class="mainrun" style="margin-top:10px;padding:10px;line-height:1.5;">
+        SQL语法例子:<br />
+        select * from {{.tablename}} where ... limit 1<br />
+        delete from {{.tablename}} where ...<br />
+        update {{.tablename}} set ... where ...<br />
+        drop table {{.tablename}}<br />
+        alter table {{.tablename}} rename New_TableName;
+        </div>
     <br />
     <div style="font-size:11pt;color:#666666;">wuknet.net<br />悟空网络</div><br /><br />
 </body>
