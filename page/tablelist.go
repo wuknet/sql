@@ -61,7 +61,8 @@ func Tablelist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 					tablelist += `<td><a href="/rowslist/?database_name=` + database_name + `&tablename=` + rows[i][0] + `">` + rows[i][0] + `</a></td>`
 					tablelist += `<td>` + rows[i][1] + `</td>`
 					tablelist += `<td>` + rows[i][2] + `</td>`
-					tablelist += `<td>` + rows[i][3] + `</td>`
+					datasize, _ := strconv.ParseInt(rows[i][3], 10, 64)
+					tablelist += `<td>` + formatFileSize(datasize) + `</td>`
 					tablelist += `<td>` + rows[i][4] + `</td>`
 					tablelist += `<td>` + rows[i][5] + `</td>`
 					tablelist += "</tr>"
@@ -73,10 +74,15 @@ func Tablelist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			}
 			tablelist += "</table>"
 		}
+		////////////////////
+		database_sizes, _ := mysql.QueryOne(db, "select sum(DATA_LENGTH) as data from information_schema.TABLES where table_schema='"+database_name+"';")
+		database_size, _ := strconv.ParseInt(database_sizes[0], 10, 64)
+		database_sizes[0] = formatFileSize(database_size)
 		/////////////////////////////////////////////////////////////////////////////////////
 		data := map[string]template.HTML{
 			"tableNum":      template.HTML(strconv.Itoa(tableNum)),
 			"database_name": template.HTML(database_name),
+			"database_size": template.HTML(database_sizes[0]),
 			"tablelist":     template.HTML(tablelist),
 		}
 
@@ -89,5 +95,22 @@ func Tablelist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if err != nil {
 			fun.Log(0, "login.go:"+fmt.Sprintf("%s", err))
 		}
+	}
+}
+
+func formatFileSize(fileSize int64) (size string) {
+	if fileSize < 1024 {
+		//return strconv.FormatInt(fileSize, 10) + "B"
+		return fmt.Sprintf("%.2fB", float64(fileSize)/float64(1))
+	} else if fileSize < (1024 * 1024) {
+		return fmt.Sprintf("%.2fKB", float64(fileSize)/float64(1024))
+	} else if fileSize < (1024 * 1024 * 1024) {
+		return fmt.Sprintf("%.2fMB", float64(fileSize)/float64(1024*1024))
+	} else if fileSize < (1024 * 1024 * 1024 * 1024) {
+		return fmt.Sprintf("%.2fGB", float64(fileSize)/float64(1024*1024*1024))
+	} else if fileSize < (1024 * 1024 * 1024 * 1024 * 1024) {
+		return fmt.Sprintf("%.2fTB", float64(fileSize)/float64(1024*1024*1024*1024))
+	} else { //if fileSize < (1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+		return fmt.Sprintf("%.2fEB", float64(fileSize)/float64(1024*1024*1024*1024*1024))
 	}
 }
